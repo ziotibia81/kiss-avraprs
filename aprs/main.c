@@ -86,7 +86,7 @@ static void message_callback(struct AX25Msg *msg)
 static void init(void)
 {
 	IRQ_ENABLE;
-	kdbg_init();
+	//kdbg_init();
 	timer_init();
 
 	/*
@@ -103,9 +103,9 @@ static void init(void)
 
 	/* Initialize serial port, we are going to use it to show APRS messages*/
 	ser_init(&ser, SER_UART0);
-	ser_setbaudrate(&ser, 57600L);
+	ser_setbaudrate(&ser, 9600L);
 
-	kiss_init(&ser, &ax25, &afsk);
+    kiss_init(&ser, &ax25, &afsk);
 }
 
 int main(void)
