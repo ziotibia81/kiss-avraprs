@@ -71,23 +71,23 @@ void hw_afsk_dacInit(int ch, struct Afsk *_ctx);
  * Activate strobe pin. We use it for debugging purposes. If you don't use it, simply
  * leave empty the following macros
  */
-#define AFSK_STROBE_INIT() do { DDRE |= BV(4); } while (0)
-#define AFSK_RX_STROBE_INIT() do { DDRE |= BV(5); } while (0)
-#define AFSK_PTT_INIT() do { DDRH |= BV(5); } while (0)
+#define AFSK_STROBE_INIT() do { DDRH |= BV(5); } while (0)
+#define AFSK_RX_STROBE_INIT() do { DDRH |= BV(6); } while (0)
+#define AFSK_PTT_INIT() do { DDRE |= BV(4); } while (0)
 
 /*
  * Set the pin high. This macro is called at the beginning of the interrupt routine
  */
-#define AFSK_STROBE_ON()   do { PORTE |= BV(4); } while (0)
-#define AFSK_RX_STROBE_ON() do { PORTE |= BV(5); } while (0)
-#define AFSK_PTT_ON()   do { PORTH |= BV(5); } while (0)
+#define AFSK_STROBE_ON()   do { PORTH |= BV(5); } while (0)
+#define AFSK_RX_STROBE_ON() do { PORTH |= BV(6); } while (0)
+#define AFSK_PTT_ON()   do { PORTE |= BV(4); } while (0)
 
 /*
  * Set the pin low. This macro is called at the end of the interrupt routine
  */
-#define AFSK_STROBE_OFF()  do { PORTE &= ~BV(4); } while (0)
-#define AFSK_RX_STROBE_OFF() do { PORTE &= ~BV(5); } while (0)
-#define AFSK_PTT_OFF()   do { PORTH &= ~BV(5); } while (0)
+#define AFSK_STROBE_OFF()  do { PORTH &= ~BV(5); } while (0)
+#define AFSK_RX_STROBE_OFF() do { PORTH &= ~BV(6); } while (0)
+#define AFSK_PTT_OFF()   do { PORTE &= ~BV(4); } while (0)
 
 /**
  * Initialize the specified channel of the DAC for AFSK needs.
@@ -99,7 +99,7 @@ void hw_afsk_dacInit(int ch, struct Afsk *_ctx);
  * \param ctx AFSK context (\see Afsk).  This parameter must be saved and
  *             passed back to afsk_dac_isr() for every convertion.
  */
-#define AFSK_DAC_INIT(ch, ctx)  do  { (void)ch, (void)ctx; DDRE |= BV(3); DDRH |= BV(3); DDRH |= BV(4); DDRH |= BV(5); AFSK_PTT_INIT(); } while (0);
+#define AFSK_DAC_INIT(ch, ctx)  do  { (void)ch, (void)ctx; DDRG |= BV(5); DDRE |= BV(3); DDRH |= BV(3); DDRH |= BV(4); AFSK_PTT_INIT(); } while (0);
 
 /**
  * Start DAC convertions on channel \a ch.

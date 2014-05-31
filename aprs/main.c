@@ -86,7 +86,6 @@ static void message_callback(struct AX25Msg *msg)
 static void init(void)
 {
 	IRQ_ENABLE;
-	//kdbg_init();
 	timer_init();
 
 	/*

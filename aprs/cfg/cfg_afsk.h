@@ -99,7 +99,7 @@
  * $WIZ$ type = "int"
  * $WIZ$ min = 1
  */
-#define CONFIG_AFSK_PREAMBLE_LEN 300UL
+#define CONFIG_AFSK_PREAMBLE_LEN 500UL
 
 
 
@@ -108,6 +108,6 @@
  * $WIZ$ type = "int"
  * $WIZ$ min = 1
  */
-#define CONFIG_AFSK_TRAILER_LEN 50UL
+#define CONFIG_AFSK_TRAILER_LEN 100UL
 
 #endif /* CFG_AFSK_H */
