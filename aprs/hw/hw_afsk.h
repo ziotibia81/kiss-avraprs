@@ -67,38 +67,27 @@ void hw_afsk_dacInit(int ch, struct Afsk *_ctx);
  */
 #define AFSK_ADC_INIT(ch, ctx) hw_afsk_adcInit(ch, ctx)
 
-/* Define strobe pins
-* 0 = PortB0 = Arduino D08
-* 1 = PortB1 = Arduino D09
-* 2 = PortB2 = Arduino D10
-* 3 = PortB3 = Arduino D11
-* 4 = PortB4 = Arduino D12
-* 5 = PortB5 = Arduino D13 (On-board LED)
-*/
-#define AFSK_STROBE_1 4
-#define AFSK_STROBE_2 2
-#define AFSK_STROBE_3 3
 /*
  * Activate strobe pin. We use it for debugging purposes. If you don't use it, simply
  * leave empty the following macros
  */
-#define AFSK_STROBE_INIT() do { DDRB |= BV(AFSK_STROBE_1); } while (0)
-#define AFSK_RX_STROBE_INIT() do { DDRB |= BV(AFSK_STROBE_2); } while (0)
-#define AFSK_PTT_INIT() do { DDRB |= BV(AFSK_STROBE_3); } while (0)
+#define AFSK_STROBE_INIT() do { DDRH |= BV(5); } while (0)
+#define AFSK_RX_STROBE_INIT() do { DDRH |= BV(6); } while (0)
+#define AFSK_PTT_INIT() do { DDRE |= BV(4); } while (0)
 
 /*
  * Set the pin high. This macro is called at the beginning of the interrupt routine
  */
-#define AFSK_STROBE_ON()   do { PORTB |= BV(AFSK_STROBE_1); } while (0)
-#define AFSK_RX_STROBE_ON() do { PORTB |= BV(AFSK_STROBE_2); } while (0)
-#define AFSK_PTT_ON()   do { PORTB |= BV(AFSK_STROBE_3); } while (0)
+#define AFSK_STROBE_ON()   do { PORTH |= BV(5); } while (0)
+#define AFSK_RX_STROBE_ON() do { PORTH |= BV(6); } while (0)
+#define AFSK_PTT_ON()   do { PORTE |= BV(4); } while (0)
 
 /*
  * Set the pin low. This macro is called at the end of the interrupt routine
  */
-#define AFSK_STROBE_OFF()  do { PORTB &= ~BV(AFSK_STROBE_1); } while (0)
-#define AFSK_RX_STROBE_OFF() do { PORTB &= ~BV(AFSK_STROBE_2); } while (0)
-#define AFSK_PTT_OFF()   do { PORTB &= ~BV(AFSK_STROBE_3); } while (0)
+#define AFSK_STROBE_OFF()  do { PORTH &= ~BV(5); } while (0)
+#define AFSK_RX_STROBE_OFF() do { PORTH &= ~BV(6); } while (0)
+#define AFSK_PTT_OFF()   do { PORTE &= ~BV(4); } while (0)
 
 /**
  * Initialize the specified channel of the DAC for AFSK needs.
@@ -110,18 +99,18 @@ void hw_afsk_dacInit(int ch, struct Afsk *_ctx);
  * \param ctx AFSK context (\see Afsk).  This parameter must be saved and
  *             passed back to afsk_dac_isr() for every convertion.
  */
-#define AFSK_DAC_INIT(ch, ctx)   do { (void)ch, (void)ctx; DDRD |= 0xF0; DDRB |= BV(3); } while (0)
+#define AFSK_DAC_INIT(ch, ctx)  do  { (void)ch, (void)ctx; DDRG |= BV(5); DDRE |= BV(3); DDRH |= BV(3); DDRH |= BV(4); AFSK_PTT_INIT(); } while (0);
 
 /**
  * Start DAC convertions on channel \a ch.
  * \param ch DAC channel.
  */
-#define AFSK_DAC_IRQ_START(ch)   do { (void)ch; extern bool hw_afsk_dac_isr; PORTB |= BV(3); hw_afsk_dac_isr = true; } while (0)
+#define AFSK_DAC_IRQ_START(ch) do { (void)ch; extern bool hw_afsk_dac_isr; AFSK_PTT_ON(); hw_afsk_dac_isr = true; } while (0);
 
 /**
  * Stop DAC convertions on channel \a ch.
  * \param ch DAC channel.
  */
-#define AFSK_DAC_IRQ_STOP(ch)    do { (void)ch; extern bool hw_afsk_dac_isr; PORTB &= ~BV(3); hw_afsk_dac_isr = false; } while (0)
+#define AFSK_DAC_IRQ_STOP(ch)  do { (void)ch; extern bool hw_afsk_dac_isr; AFSK_PTT_OFF(); hw_afsk_dac_isr = false; } while (0);
 
 #endif /* HW_AFSK_H */

@@ -90,8 +90,24 @@ DECLARE_ISR(ADC_vect)
 {
 	TIFR1 = BV(ICF1);
 	afsk_adc_isr(ctx, ((int16_t)((ADC) >> 2) - 128));
+
+    if (hw_afsk_dac_isr) {
+        uint8_t res = afsk_dac_isr(ctx);
+        if (res & 0b00010000) PORTG |= BV(5); else PORTG &= ~BV(5);
+        if (res & 0b00100000) PORTE |= BV(3); else PORTE &= ~BV(3);
+        if (res & 0b01000000) PORTH |= BV(3); else PORTH &= ~BV(3);
+        if (res & 0b10000000) PORTH |= BV(4); else PORTH &= ~BV(4);
+	}
+    else {
+        PORTG &= ~BV(5);
+        PORTE &= ~BV(3);
+        PORTH &= ~BV(3);
+        PORTH |= BV(4);
+    }
+/*
 	if (hw_afsk_dac_isr)
 		PORTD = afsk_dac_isr(ctx) & 0xF0;
 	else
 		PORTD = 128;
+*/
 }
